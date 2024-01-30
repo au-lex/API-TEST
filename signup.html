@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <title>Registration Form</title>
+</head>
+<body>
+
+  <main class='px-[1rem] min-h-[100vh] bg-rose-900'>
+    <h2 class='text-[2rem] capitalize text-center text-slate-100 pt-[2rem]'>Register</h2>
+    <form class='mt-[1rem]' id="registrationForm">
+
+      <div class="inputCon">
+        <label class='block text-slate-300 text-[16px] mb-1'>First Name:</label>
+        <input
+          id="firstName"
+          type="text"
+          class='bg-transparent text-white border outline-none w-full py-[.6rem] rounded-[5px] px-4'
+        />
+      </div>
+
+      <div class="inputCon">
+        <label class='block text-slate-300 text-[16px] mb-1'>Last Name:</label>
+        <input
+          id="lastName"
+          type="text"
+          class='bg-transparent text-white border outline-none w-full py-[.6rem] rounded-[5px] px-4'
+        />
+      </div>
+
+      <div class="inputCon my-[1.5rem]">
+        <label class='block text-slate-300 text-[16px] mb-1'>Email:</label>
+        <input
+          id="email"
+          type="text"
+          class='bg-transparent text-white border outline-none w-full py-[.6rem] rounded-[5px] px-4'
+        />
+      </div>
+
+      <div class="inputCon my-[1.5rem]">
+        <label class='block text-slate-300 text-[16px] mb-1'>Phone No:</label>
+        <input
+          id="phoneNumber"
+          type="text"
+          class='bg-transparent text-white  border outline-none w-full py-[.6rem] rounded-[5px] px-4'
+        />
+      </div>
+
+      <div class="inputCon">
+        <label class='block text-slate-300 text-[16px] mb-1'>Password:</label>
+        <input
+          id="password"
+          type="text"
+          class='bg-transparent  text-white border outline-none w-full py-[.6rem] rounded-[5px] px-4'
+        />
+      </div>
+
+      <div class="mt-[2rem]">
+        <button
+          type="button"
+          onclick="signup()"
+          class='bg-gray-100 text-[18px] font-semibold cursor-pointer w-full rounded-md outline-none py-3'
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+    <div id="signupLoader" class="signupLoader w-full bg-blue-500 h-[100vh]  fixed top-0 left-0 right-0">
+
+      <!-- <div class="flex justify-center ">
+   <div class="w-[5rem] h-[5rem] mt-[20rem]
+    rounded-full border-b-blue-500 animate-spin 
+     border-gray-300 border-8"></div> -->
+
+     <section class="dots-container">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      
+      <div class="dot"></div>
+    </section>
+       
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function redirectToOTPPage(email) {
+        // Redirect to the OTP page with email as a query parameter
+        window.location.href = `otp.html?email=${encodeURIComponent(email)}`;
+      } 
+
+    async function signup() {
+
+      const loader = document.getElementById('signupLoader')
+    
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const email = document.getElementById('email').value;
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      const password = document.getElementById('password').value;
+
+      // Input validation
+      const fullNameRegex = /^[a-zA-Z\s]+$/;
+      const phoneNumberRegex = /^\+?\d{0,4}?\d{10}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+      const isValidFirstName = fullNameRegex.test(firstName);
+      const isValidLastName = fullNameRegex.test(lastName);
+      const isValidPhoneNumber = phoneNumberRegex.test(phoneNumber);
+      const isValidEmail = emailRegex.test(email);
+      const isValidPassword = passwordRegex.test(password);
+
+      if (!isValidFirstName || !isValidLastName) {
+        alert('Invalid first or last name. Please use only letters and spaces.');
+        return;
+      }
+
+      if (!isValidPhoneNumber) {
+        alert('Invalid phone number. Please enter a valid phone number.');
+        return;
+      }
+
+      if (!isValidEmail) {
+        alert('Invalid email address. Please enter a valid email.');
+        return;
+      }
+
+      if (!isValidPassword) {
+        alert('Invalid password. Please follow the password requirements.');
+        return;
+      }
+
+      const formData = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        password: password,
+
+      };
+
+     
+
+      try {
+        const response = await fetch('https://ill-gold-cricket-cuff.cyclic.app/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+
+          // alert('Signup successful!');
+          loader.classList.add('active')
+          redirectToOTPPage(email); 
+           setTimeout(() => {
+        loader.classList.remove('active');
+        redirectToOTPPage(email); 
+      }, 3000);
+          // You can redirect the user to another page or perform o alert('An error occurred during signup. Please try again later.');ther actions here
+        } else {
+          const data = await response.json();
+          alert(`Signup failed: ${data.message}`);
+        }
+      } catch (error) {
+        console.error('Error during signup:', error);
+       
+      }
+    }
+  </script>
+</body>
+</html>

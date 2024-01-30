@@ -1,0 +1,78 @@
+  <script>
+    function redirectToOTPPage() {
+      // Redirect to the OTP page
+      window.location.href = 'https://authhh.onrender.com/signup';
+    }
+
+    function handleSubmit() {
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      const password = document.getElementById('password').value;
+
+      const fullNameRegex = /^[a-zA-Z\s]+$/;
+      const phoneNumberRegex = /^\+?\d{0,4}?\d{10}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+      const isValidFullName = fullNameRegex.test(fullName);
+      const isValidPhoneNumber = phoneNumberRegex.test(phoneNumber);
+      const isValidEmail = emailRegex.test(email);
+      const isValidPassword = passwordRegex.test(password);
+
+      if (isValidFullName && isValidPhoneNumber && isValidEmail && isValidPassword) {
+        // Perform the actual API call
+        fetch('https://authhh.onrender.com/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullName,
+            email,
+            phoneNumber,
+            password,
+          }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Assuming the API response contains a success property
+            if (data.success) {
+              console.log('Registration successful!');
+              console.log('User Details:');
+              console.log('Full Name:', fullName);
+              console.log('Phone Number:', phoneNumber);
+              console.log('Email:', email);
+
+              // Redirect to OTP page after successful registration
+              redirectToOTPPage();
+            } else {
+              console.log('Registration failed. Please check your input.');
+              console.log('API Error:', data.error); // Log the API-specific error if available
+            }
+          })
+          .catch(error => {
+            console.error('An error occurred during the API call:', error);
+          });
+      } else {
+        // Handle validation errors
+        console.log('Registration failed. Please check your input.');
+
+        if (!isValidFullName) {
+          console.log('Invalid Full Name. It should consist of alphabets and spaces only.');
+        }
+
+        if (!isValidPhoneNumber) {
+          console.log('Invalid Phone Number. Please enter a valid phone number.');
+        }
+
+        if (!isValidEmail) {
+          console.log('Invalid Email. Please enter a valid email address.');
+        }
+
+        if (!isValidPassword) {
+          console.log('Invalid Password. It should meet the specified criteria.');
+        }
+      }
+    }
+  </script>

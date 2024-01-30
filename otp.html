@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="max-w-md mx-auto p-6 bg-white shadow-md mt-10">
+
+        <h2 class="text-2xl font-semibold mb-6">OTP Verification</h2>
+
+        <form id="otp-form">
+
+            <div class="mb-6">
+                <label for="email" class="block text-sm font-medium text-gray-600">Email Address</label>
+                <input type="email" id="email" name="email"
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+
+            <div class="mb-6">
+                <label for="otp" class="block text-sm font-medium text-gray-600">OTP</label>
+                <input type="text" id="otp" name="otp"
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+
+            <button type="submit"
+                class="bg-blue-500 text-white py-2 px-4 rounded-md">Verify</button>
+
+        </form>
+
+        <p class="text-gray-600 mt-4">This OTP will expire in 5 minutes. Do not share it with anyone.</p>
+
+    </div>
+
+    <!-- <script>
+        function redirectToLoginPage() {
+            // Redirect to the LOGIN page
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const otp = document.getElementById('otp').value;
+
+            // Send a request to the server to verify the OTP
+            const response = await fetch('https://authhh.onrender.com/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, otp })
+            });
+
+            if (response.ok) {
+                alert('OTP verified successfully.');
+                // Redirect to login page after successful OTP verification
+                redirectToLoginPage();
+            } else {
+                alert('Failed to verify the OTP. Please try again.');
+            }
+        });
+    </script> -->
+
+
+    <script>
+        // Get the email from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailFromURL = urlParams.get('email');
+    
+        // Set the email value in the OTP form
+        document.getElementById('email').value = emailFromURL;
+    
+        document.getElementById('otp-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value;
+          const otp = document.getElementById('otp').value;
+    
+          // Send a request to the server to verify the OTP
+          const response = await fetch('https://ill-gold-cricket-cuff.cyclic.app/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, otp })
+          });
+    
+          if (response.ok) {
+            alert('OTP verified successfully.');
+            // Redirect to login page after successful OTP verification
+            redirectToLoginPage();
+          } else {
+            alert('Failed to verify the OTP. Please try again.');
+          }
+        });
+      </script>
+    
+</body>
+
+</html>
